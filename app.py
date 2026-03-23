@@ -23,10 +23,10 @@ if uploaded_file is not None:
     fig.add_scatter(x=anomalies["timestamp"],y=anomalies["temperature"],mode="markers",name="Аномалии")
     st.plotly_chart(fig)
     st.subheader("Сезонные профили")
-    +C=statistics[statistics["city"] == whichcity].copy()
-    +C["mean"]=+C["mean"].round(2).astype(str)+" °C"
-    +C["std"]=+C["std"].round(2).astype(str)+ " °C"
-    st.write(+C)
+    C=statistics[statistics["city"] == whichcity].copy()
+    C["mean"]=C["mean"].round(2).astype(str)+" °C"
+    C["std"]=C["std"].round(2).astype(str)+ " °C"
+    st.write(C)
     st.subheader("Текущая температура")
     api = st.text_input("Введдите api....", type="password")
     if api:
