@@ -21,6 +21,12 @@ if uploaded_file is not None:
     fig=px.line(datachoose,x="timestamp",y="temperature",title=f"Показатель в городе {whichcity}")
     anomalies=datachoose[datachoose["anomaly"]==1]
     fig.add_scatter(x=anomalies["timestamp"],y=anomalies["temperature"],mode="markers",name="Аномалии")
+
+
+    fig.add_scatter(x=datachoose["timestamp"],y=datachoose["movingaverage"]+2*datachoose["movingstd"],mode="lines",name="+2σ")
+    fig.add_scatter(x=datachoose["timestamp"],y=datachoose["movingaverage"]-2*datachoose["movingstd"],mode="lines",name="-2σ")
+    #дополнительная функциональность
+
     st.plotly_chart(fig)
     st.subheader("Сезонные профили")
     C=statistics[statistics["city"] == whichcity].copy()
@@ -46,10 +52,6 @@ if uploaded_file is not None:
                 season="autumnf"
         result = checkfile(whichcity, season, temp, statistics)
         st.write(result)
-
-
-
-
 
 
 
