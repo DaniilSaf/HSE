@@ -14,14 +14,19 @@ if uploaded_file is not None:
     datachoose=Anomaly(datachoose)
     statistics=StandardDeviation(df)
     st.subheader("Конкретные данные")
-    st.write(datachoose["temperature"].describe())
+    stats=datachoose["temperature"].describe().drop("count")
+    stats=stats.round(2).astype(str)+" °C"
+    st.write(stats)
     st.subheader("Графический показатель колебания температы")
     fig=px.line(datachoose,x="timestamp",y="temperature",title=f"Показатель в городе {whichcity}")
     anomalies=datachoose[datachoose["anomaly"]==1]
     fig.add_scatter(x=anomalies["timestamp"],y=anomalies["temperature"],mode="markers",name="Аномалии")
     st.plotly_chart(fig)
     st.subheader("Сезонные профили")
-    st.write(statistics[statistics["city"]==whichcity])
+    +C=statistics[statistics["city"] == whichcity].copy()
+    +C["mean"]=+C["mean"].round(2).astype(str)+" °C"
+    +C["std"]=+C["std"].round(2).astype(str)+ " °C"
+    st.write(+C)
     st.subheader("Текущая температура")
     api = st.text_input("Введдите api....", type="password")
     if api:
@@ -29,7 +34,7 @@ if uploaded_file is not None:
         if isinstance(temp,dict) and temp.get("cod") in [400,401,402,403,404,405]:
             st.error(temp["message"])
         else:
-            st.write(f"Текущая температура в {whichcity}:{temp} °C")
+            st.write(f"Текущая температура в {whichcity}: {temp} °C")
             month = pd.Timestamp.now().month
             if month in [1,2,12]:
                 season="winter"
@@ -41,6 +46,10 @@ if uploaded_file is not None:
                 season="autumnf"
         result = checkfile(whichcity, season, temp, statistics)
         st.write(result)
+
+
+
+
 
 
 
